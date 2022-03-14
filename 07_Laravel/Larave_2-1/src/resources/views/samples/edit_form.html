@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Laravel_07-1</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand navbar-dark blue-gradient">
+    <a class="navbar-brand" href="top_page.html">Autumn</a>
+    <ul class="navbar-nav ml-auto">
+
+        <li class="nav-item">
+            <a class="nav-link" href="add_form.html">投稿する</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="register_form.html">ユーザー登録</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="login_form.html">ログイン</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#">ログアウト</a>
+        </li>
+        <form id="logout-button" method="POST" action="#">
+        </form>
+    </ul>
+</nav>
+
+<div class="card p-5 mt-5 w-50 mx-auto">
+    <form>
+
+        <h1 class="h3 mb-3 fw-normal text-center">メモを編集する</h1>
+
+        <!-- Title input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form4Example2">タイトル</label>
+            <input type="text" id="form4Example2" class="form-control" value="買い物メモ"/>
+        </div>
+
+        <!-- Message input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form4Example3">テキスト</label>
+            <textarea class="form-control" id="form4Example3" rows="4">魚を買う。卵を買う。</textarea>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">メモを編集する</button>
+    </form>
+</div>
+
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
+</body>
+</html>
