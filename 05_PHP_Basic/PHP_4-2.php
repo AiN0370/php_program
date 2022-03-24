@@ -19,7 +19,7 @@ switch ($score) {
   case $score < 100:
     echo "優: $score <br>";
     break;
-  case ($score = 100):
+  default:
     echo "満点: $score <br>";
     break;
 }
