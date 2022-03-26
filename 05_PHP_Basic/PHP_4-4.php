@@ -8,7 +8,28 @@
 // 条件外の入力がされた場合のエラーをしっかりと考え、処理をする。
 // input データの取得は以下のコードを参考にしてください。
 
-echo "HighかLowを入力してください。";
-$input = trim(fgets(STDIN));
+$a = rand(1, 13);
+$b = rand(1, 13);
+echo $a . ', ' . $b . '<br>';
+echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。<br>';
+$input = 'High'; //trim(fgets(STDIN));
+
+if ($b < $a) {
+    $result = 'high';
+} elseif ($b > $a) {
+    $result = 'low';
+} else {
+    $result = 'same';
+}
+
+if (strtolower($input) === 'high' || strtolower($input) === 'low') {
+    if (strtolower($input) === $result) {
+        echo 'You win!!';
+    } else {
+        echo 'You lose!!';
+    }
+} else {
+    echo 'Error!';
+}
 
 ?>
