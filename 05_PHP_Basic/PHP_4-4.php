@@ -8,28 +8,48 @@
 // 条件外の入力がされた場合のエラーをしっかりと考え、処理をする。
 // input データの取得は以下のコードを参考にしてください。
 
-$a = rand(1, 13);
-$b = rand(1, 13);
-echo $a . ', ' . $b . '<br>';
-echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。<br>';
-$input = trim(fgets(STDIN));
+$scoreA = 0;
+$scoreB = 0;
 
-if ($b < $a) {
-    $result = 'high';
-} elseif ($b > $a) {
-    $result = 'low';
-} else {
-    $result = 'same';
+for ($i = 1; $i <= 26; $i++) {
+    $a = rand(1, 13);
+    $b = rand(1, 13);
+    echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。';
+    $input = trim(fgets(STDIN));
+
+    if ($a > $b) {
+        $result = 'high';
+    } elseif ($a < $b) {
+        $result = 'low';
+    } else {
+        $result = false;
+        $isDraw = true;
+    }
+
+    echo $a . ', ' . $b . ', ' . $result . ' ';
+
+    if (strtolower($input) === 'high' || strtolower($input) === 'low') {
+        if ($isDraw) {
+            echo 'Draw! ';
+        } elseif (strtolower($input) === $result) {
+            echo 'Correct! ';
+            $scoreA += 2;
+        } else {
+            echo 'Incorrect! ';
+            $scoreB += 2;
+        }
+        echo 'Turn' . $i . ' You:' . $scoreA . ' Opponent:' . $scoreB . ' ';
+        $isDraw = false;
+    } else {
+        echo 'Error!';
+        $i--;
+    }
 }
 
-if (strtolower($input) === 'high' || strtolower($input) === 'low') {
-    if (strtolower($input) === $result) {
-        echo 'You win!!';
-    } else {
-        echo 'You lose!!';
-    }
+if ($scoreA > $scoreB) {
+    echo 'You won!';
 } else {
-    echo 'Error!';
+    echo 'You lost!';
 }
 
 ?>
