@@ -12,7 +12,7 @@ $a = rand(1, 13);
 $b = rand(1, 13);
 echo $a . ', ' . $b . '<br>';
 echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。<br>';
-$input = 'High'; //trim(fgets(STDIN));
+$input = trim(fgets(STDIN));
 
 if ($b < $a) {
     $result = 'high';
