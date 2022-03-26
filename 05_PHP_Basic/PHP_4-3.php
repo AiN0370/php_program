@@ -11,9 +11,9 @@ echo 'a=' . $a . ', b=' . $b . ', a+b=' . $c . '<br>';
 if ($a >= 60 && $b >= 60) {
     echo '合格';
 } elseif ($a + $b >= 130) {
-    echo '不合格';
+    echo '合格';
 } elseif ($a + $b >= 100 && ($a >= 90 || $b >= 90)) {
-    echo '不合格';
+    echo '合格';
 } else {
     echo '不合格';
 }
