@@ -10,46 +10,46 @@
 
 $scoreA = 0;
 $scoreB = 0;
+// 自分:a と相手:b のカード番号をランダムに取得
+$a = rand(1, 13);
+$b = rand(1, 13);
+echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。';
+$input = trim(fgets(STDIN));
 
-for ($i = 1; $i <= 26; $i++) {
-    $a = rand(1, 13);
-    $b = rand(1, 13);
-    echo 'あなたの数字は' . $a . 'です。HighかLowを入力してください。';
-    $input = trim(fgets(STDIN));
+// 自分と相手のカード番号を比較して結果を取得and出力
+if ($a > $b) {
+    $result = 'high';
+} elseif ($a < $b) {
+    $result = 'low';
+} else {
+    $result = 'draw';
+}
+echo $a . ', ' . $b . ', 結果：' . $result . ' ';
 
-    if ($a > $b) {
-        $result = 'high';
-    } elseif ($a < $b) {
-        $result = 'low';
+// ユーザーの予想と結果に応じてそれぞれに点数を分け与える
+if (strtolower($input) === 'high' || strtolower($input) === 'low') {
+    if ($result === 'draw') {
+        echo 'Draw! ';
+    } elseif (strtolower($input) === $result) {
+        echo 'Correct! ';
+        $scoreA += 2;
     } else {
-        $result = false;
-        $isDraw = true;
+        echo 'Incorrect! ';
+        $scoreB += 2;
     }
-
-    echo $a . ', ' . $b . ', ' . $result . ' ';
-
-    if (strtolower($input) === 'high' || strtolower($input) === 'low') {
-        if ($isDraw) {
-            echo 'Draw! ';
-        } elseif (strtolower($input) === $result) {
-            echo 'Correct! ';
-            $scoreA += 2;
-        } else {
-            echo 'Incorrect! ';
-            $scoreB += 2;
-        }
-        echo 'Turn' . $i . ' You:' . $scoreA . ' Opponent:' . $scoreB . ' ';
-        $isDraw = false;
-    } else {
-        echo 'Error!';
-        $i--;
-    }
+    // 自分と相手のスコアを出力
+    echo 'You:' . $scoreA . ' Opponent:' . $scoreB . ' ';
+} else {
+    echo 'Error! HighかLow以外の入力がされました。もう一度トライしてください。';
 }
 
+// 勝ち負けを表示
 if ($scoreA > $scoreB) {
-    echo 'You won!';
+    echo 'You won🔥 ';
+} elseif ($scoreA < $scoreB) {
+    echo 'You lost💧 ';
 } else {
-    echo 'You lost!';
+    echo 'Try again! ';
 }
 
 ?>
