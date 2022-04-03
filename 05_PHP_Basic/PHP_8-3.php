@@ -30,7 +30,7 @@ $ans = [];
 $dataList = new DataList();
 
 // $infoA配列から20歳以上のものを$ans配列にpush
-foreach ($dataList->infoA as $key => $value) {
+foreach ($dataList->infoA as $value) {
     if ($value['age'] >= 20) {
         array_push($ans, $value['name']);
     }
