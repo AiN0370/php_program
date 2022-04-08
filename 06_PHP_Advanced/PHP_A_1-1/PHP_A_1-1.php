@@ -1,15 +1,20 @@
 <?php
 // 【PHP_A_1-1】 以下フォームからデータを受け取り、「XX さんは XX 歳です」と表示してください。また、年齢が 120 歳以上ならエラーを表示してください。
 // フォームに記載があるかチェック
-if (!empty($_GET)) {
-    $name = htmlspecialchars($_GET['name']);
-    $age = htmlspecialchars($_GET['age']);
+if (!empty($_GET['name']) && !empty($_GET['age'])) {
+    $name = htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8');
+    $age = htmlspecialchars($_GET['age'], ENT_QUOTES, 'UTF-8');
+
     // 年齢が120歳未満の時、入力されたデータを出力
-    if ($age < 120) {
+    if (is_numeric($age) && $age < 120) {
         $output = $name . 'さんは' . $age . '歳です';
+    } elseif (!is_numeric($age)) {
+        $output = 'Error: 年齢は数字を入力してください';
     } else {
         $output = 'Error: 年齢を120歳未満にしてください';
     }
+} else {
+    $output = 'Error: 全てのフォームに入力がありません';
 } ?>
 <html>
   <head>
