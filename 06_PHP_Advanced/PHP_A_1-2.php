@@ -16,14 +16,13 @@ try {
     // users table から情報を得て出力
     $sql = 'SELECT * FROM users';
     $users = $pdo->query($sql);
-    foreach ($users as $user) {
-        echo $user['name'] . ', ' . $user['email'] . ', ' . $user['password'];
-        echo '<br>';
-    }
+    $rows = $users->fetchAll();
+    print_r($rows);
 } catch (PDOException $error) {
     // PDO connection エラーの場合メッセージ出力
     echo $error->getMessage();
     die();
+} finally {
+    // 接続を閉じる
+    $pdo = null;
 }
-// 接続を閉じる
-$pdo = null;
