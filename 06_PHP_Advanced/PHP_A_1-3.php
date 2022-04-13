@@ -7,18 +7,28 @@ $dbname = 'mysql';
 
 // PDO 接続
 $dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
-$pdo = new PDO($dsn, $user, $password);
-// SQL作成
-$stmt = $pdo->prepare('DELETE FROM orders WHERE id = :id');
-// 一番大きいID＝10のデータを削除
-echo 'Delete "id=10" <br>';
-$id = 10;
-$res = $stmt->execute(['id' => $id]);
+try {
+    $pdo = new PDO($dsn, $user, $password);
+    // 一番大きいIDのデータを削除
+    $stmt = $pdo->query(
+        'DELETE FROM orders
+    ORDER BY id DESC
+    LIMIT 1;'
+    );
 
-// 確認のためテーブルを出力
-$stmt = $pdo->query('SELECT * FROM orders');
-while ($order = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    echo $order['id'] . '<br>';
+    // 確認のためテーブルを出力
+    $orders = $pdo->query('SELECT * FROM orders');
+    $rows = $orders->fetchAll();
+    foreach ($rows as $order) {
+        echo $order['id'] . '<br>';
+    }
+} catch (PDOException $error) {
+    // エラー処理
+    echo $error->getMessage();
+    die();
+} finally {
+    // PDOを閉じる
+    $pdo = null;
 }
 
 ?>
