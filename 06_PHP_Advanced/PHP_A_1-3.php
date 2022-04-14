@@ -10,14 +10,12 @@ $dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
 try {
     $pdo = new PDO($dsn, $user, $password);
     // 一番大きいIDのデータを削除
-    $stmt = $pdo->query(
-        'DELETE FROM orders
-    ORDER BY id DESC
-    LIMIT 1;'
-    );
+    $delete = 'DELETE FROM orders ORDER BY id DESC LIMIT 1;';
+    $stmt = $pdo->query($delete);
 
     // 確認のためテーブルを出力
-    $orders = $pdo->query('SELECT * FROM orders');
+    $select = 'SELECT * FROM orders';
+    $orders = $pdo->query($select);
     $rows = $orders->fetchAll();
     foreach ($rows as $order) {
         echo $order['id'] . '<br>';
