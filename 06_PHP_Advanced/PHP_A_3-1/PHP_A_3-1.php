@@ -16,12 +16,11 @@ try {
         if (empty($_POST['email']) || empty($_POST['password'])) {
             $message = 'All fields are required';
             // Emailに関するエラー
-        } elseif ($email == false) {
+        } elseif (!$email) {
             $message = 'Please enter a valid email address';
         } else {
             // 提出された情報と該当するデータがあるか調べる
-            $query =
-                'SELECT * FROM users WHERE email = :email AND password =  :password';
+            $query = 'SELECT * FROM users WHERE email = :email AND password =  :password';
             $stmt = $connect->prepare($query);
             $stmt->execute([
                 'email' => $_POST['email'],
