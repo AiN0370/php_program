@@ -37,72 +37,43 @@ $area = [
 ];
 
 // ID が一致しているJSONデータをArea配列に入れる
-// 北海道地方
 foreach ($prefecture[0] as $key => $value) {
     if (in_array(intval($value['id']), $hokkaidoId)) {
         array_push($area['北海道地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['北海道地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 東北地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $tohokuId)) {
+    } elseif (in_array(intval($value['id']), $tohokuId)) {
         array_push($area['東北地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['東北地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 関東地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $kantoId)) {
+    } elseif (in_array(intval($value['id']), $kantoId)) {
         array_push($area['関東地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['関東地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 中部地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $chubuId)) {
+    } elseif (in_array(intval($value['id']), $chubuId)) {
         array_push($area['中部地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['中部地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 近畿地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $kinkiId)) {
+    } elseif (in_array(intval($value['id']), $kinkiId)) {
         array_push($area['近畿地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['近畿地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 中国地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $chugokuId)) {
+    } elseif (in_array(intval($value['id']), $chugokuId)) {
         array_push($area['中国地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['中国地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 四国地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $shikokuId)) {
+    } elseif (in_array(intval($value['id']), $shikokuId)) {
         array_push($area['四国地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['四国地方']['市町村名'], $value['city']);
         }
-    }
-}
-// 九州地方
-foreach ($prefecture[0] as $key => $value) {
-    if (in_array(intval($value['id']), $kyushuId)) {
+    } elseif (in_array(intval($value['id']), $kyushuId)) {
         array_push($area['九州地方']['県名'], $value['name']);
         foreach ($value['city'] as $key => $value) {
             array_push($area['九州地方']['市町村名'], $value['city']);
