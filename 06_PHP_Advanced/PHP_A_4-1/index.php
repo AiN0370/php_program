@@ -1,4 +1,4 @@
-<?php include 'PHP_A_4-6.php'; ?>
+<?php include 'PHP_A_4-1.php'; ?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -26,7 +26,7 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-  </head>
+  </head>       
   <body >
     <div class="shadow-lg card text-center w-75 d-flex m-auto mt-5">
       <div class="card-header bg-danger fs-2 text-light font-weight-bold">ポーカーゲーム</div>
@@ -34,11 +34,9 @@
         <h5 class="card-title">あなたの手札</h5>
         <!-- 手札 -->
          <div class="px-5 py-4 d-flex justify-content-between">
-            <?php foreach ($_SESSION['player1'] as $key => $value) { ?>
+            <?php foreach ($_SESSION['playerOne'] as $key => $value) { ?>
               <div class="card p-2 border-dark" style="width: 8rem; height: 12rem">
-              <h4 class="card-title fs-2"><?php echo markOutput(
-                  $value['mark']
-              ); ?></h4>
+              <h4 class="card-title fs-2"><?php echo showMark($value['mark']); ?></h4>
               <div style="height: 2rem"></div>
               <h3 class="card-text"><?php echo $value['number']; ?></h3>
               </div>
@@ -60,26 +58,30 @@
           <form method="POST">
             <input
             name="judge_game"
-              class="btn btn-danger"
-              type="submit"
-              value="勝負！" 
+            class="btn btn-danger"
+            type="submit"
+            value="勝負"
             />
           </form>
         </div>
         <p class="fs-10 pt-3">勝敗結果</p>
         <p class="fs-3 text-danger pb-3">
-          <?php if (isset($_POST['judge_game'])) {
-              echo judgeScore($score1['point'], $score2['point']);
-              echo ' ';
-              displayStatus($score1['status']);
+          <?php if ($clickCount <= 1) {
+              if (isset($_POST['judge_game'])) {
+                  echo judgeScore($scoreOne['point'], $scoreTwo['point']);
+                  echo ' ';
+                  displayStatus($scoreOne['status']);
+              }
+          } elseif ($clickCount > 1) {
+              echo 'シャッフルしてください';
           } ?></p>
         <p class="card-text">
-          <?php if (isset($_POST['judge_game'])) {
+          <?php if (isset($_POST['judge_game']) && $clickCount <= 1) {
               echo '【 相手の手札 】';
-              foreach ($_SESSION['player2'] as $key => $value) {
+              foreach ($_SESSION['playerTwo'] as $key => $value) {
                   echo $value['number'] . ', ';
               }
-              displayStatus($score2['status']);
+              displayStatus($scoreTwo['status']);
           } ?>
         </p>
         

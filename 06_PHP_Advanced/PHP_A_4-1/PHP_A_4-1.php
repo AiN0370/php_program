@@ -15,70 +15,94 @@ $host = 'localhost';
 $user = 'root';
 $password = 'root';
 $dbname = 'mysql';
-
-// PDO 接続
 $dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
-$pdo = new PDO($dsn, $user, $password);
+// PDO 接続
+try {
+    $pdo = new PDO($dsn, $user, $password);
+    // トランプの情報を取得 (一回で全て取得する方法)
+    $sql = 'SELECT * FROM trumps ORDER BY RAND() LIMIT 10;';
+    $cards = $pdo->query($sql);
+    $rows = $cards->fetchAll();
+} catch (PDOException $e) {
+    echo $error->getMessage();
+    die();
+} finally {
+    // 接続を閉じる
+    $pdo = null;
+}
+
+// 勝負ボタンの調整、すでに押されているか
+if (isset($_SESSION['clickCount'])) {
+    $clickCount = $_SESSION['clickCount'];
+} else {
+    $clickCount = 0;
+}
+if (isset($_POST['shuffle_card'])) {
+    $clickCount = 0;
+}
 
 // セッションから手札を読み込み
 if (isset($_POST['shuffle_card'])) {
-    $player1 = [];
-    $player2 = [];
+    $playerOne = [];
+    $playerTwo = [];
+    $clickCount = 0;
 } else {
-    $player1 = $_SESSION['player1'];
-    $player2 = $_SESSION['player2'];
+    $playerOne = $_SESSION['playerOne'];
+    $playerTwo = $_SESSION['playerTwo'];
 }
 
-// PDO Prepare
-$sql = 'SELECT * FROM trumps WHERE id = :id';
-$stmt = $pdo->prepare($sql);
-
-// 乱数用配列
-$rands = [];
 // カードを重複無しに二人のプレイヤーにランダムに配布
 if (isset($_POST['shuffle_card'])) {
     for ($i = 0; $i < 5; $i++) {
-        while (true) {
-            // SQLのIDをランダムに選ぶ
-            $card = rand(1, 52);
-            $stmt->execute(['id' => $card]);
-            $post = $stmt->fetch();
-            // 重複がなかったらplayer1配列にIDのマークと番号を追加
-            if (!in_array($card, $rands)) {
-                array_push($player1, [
-                    'mark' => $post['mark'],
-                    'number' => intval($post['number']),
-                ]);
-                $rands[] = $card;
-                break;
-            }
-        }
-        while (true) {
-            $card = rand(1, 52);
-            $stmt->execute(['id' => $card]);
-            $post = $stmt->fetch();
-            // 重複がなかったらplayer2配列に追加
-            if (!in_array($card, $rands)) {
-                array_push($player2, [
-                    'mark' => $post['mark'],
-                    'number' => intval($post['number']),
-                ]);
-                $rands[] = $card;
-                break;
-            }
-        }
+        array_push($playerOne, [
+            'mark' => $rows[$i]['mark'],
+            'number' => intval($rows[$i]['number']),
+        ]);
+    }
+    for ($i = 5; $i < 10; $i++) {
+        array_push($playerTwo, [
+            'mark' => $rows[$i]['mark'],
+            'number' => intval($rows[$i]['number']),
+        ]);
     }
 }
 
-function markOutput($i)
+$scoreOne = setScore($playerOne);
+$scoreTwo = setScore($playerTwo);
+
+// Win, Lose を記録する
+if (isset($_POST['judge_game']) && $clickCount < 1) {
+    if ($scoreOne > $scoreTwo) {
+        $_SESSION['win'] += 1;
+    } elseif ($scoreOne < $scoreTwo) {
+        $_SESSION['lose'] += 1;
+    }
+}
+if (isset($_POST['judge_game'])) {
+    $clickCount += 1;
+}
+
+if (isset($_POST['reset'])) {
+    $_SESSION['win'] = 0;
+    $_SESSION['lose'] = 0;
+}
+// セッションに記録
+$_SESSION['playerOne'] = $playerOne;
+$_SESSION['playerTwo'] = $playerTwo;
+$_SESSION['clickCount'] = $clickCount;
+
+// --------------------Functions--------------------------
+
+// カードのマークを表示する
+function showMark($mark)
 {
-    if ($i == 'spade') {
+    if ($mark === 'spade') {
         return '♠';
-    } elseif ($i == 'heart') {
+    } elseif ($mark === 'heart') {
         return '♥';
-    } elseif ($i == 'diamond') {
+    } elseif ($mark === 'diamond') {
         return '♦';
-    } elseif ($i == 'club') {
+    } elseif ($mark === 'club') {
         return '♣';
     }
 }
@@ -86,50 +110,51 @@ function markOutput($i)
 // 勝負！ボタンを押したら強弱を判別する
 function setScore($player)
 {
-  // 数字とマークに分ける
+    // 数字とマークに分ける
     $numbers = [];
     $marks = [];
     foreach ($player as $key => $value) {
-      $numbers[] = $value['number'];
-      $marks[] = $value['mark'];
+        $numbers[] = $value['number'];
+        $marks[] = $value['mark'];
     }
     // 同じ数字の数によってスコアのポイントを決める
     $result = array_count_values($numbers);
+    rsort($result);
+
     $score = ['point' => 0, 'status' => []];
 
     foreach ($result as $key => $value) {
-        if ($value == 5) {
+        if ($value === 5) {
             $score['point'] += 5;
             array_push($score['status'], 'ファイブカード');
-        } elseif ($value == 4) {
+        } elseif ($value === 4) {
             $score['point'] += 4;
             array_push($score['status'], 'フォーカード');
-        } elseif ($value == 3) {
+        } elseif ($value === 3) {
             $score['point'] += 3;
             array_push($score['status'], 'スリーカード');
-        } elseif ($value == 2 && array_count_values($marks) == 3) {
+            // スリーカードが出た場合ワンペアは無視
+            break;
+        } elseif ($value === 2 && array_count_values($marks) === 3) {
             $score['point'] += 2;
             array_push($score['status'], 'ツーペア');
-        } elseif ($value == 2) {
+        } elseif ($value === 2) {
             $score['point'] += 1;
             array_push($score['status'], 'ワンペア');
         }
     }
-    if ($score['point'] == 0) {
+    if ($score['point'] === 0) {
         array_push($score['status'], 'ノーペア');
     }
     return $score;
 }
 
-$score1 = setScore($player1);
-$score2 = setScore($player2);
-
 // 勝ったらYou Win、負けたらYou　Loesを表示する。
-function judgeScore($score1, $score2)
+function judgeScore($scoreOne, $scoreTwo)
 {
-    if ($score1 > $score2) {
+    if ($scoreOne > $scoreTwo) {
         return 'You Win!!';
-    } elseif ($score1 < $score2) {
+    } elseif ($scoreOne < $scoreTwo) {
         return 'You Lose!!';
     } else {
         return 'Draw';
@@ -143,20 +168,4 @@ function displayStatus($status)
         echo $value . ' ';
     }
 }
-// Win, Lose を記録する
-if (isset($_POST['judge_game'])) {
-    if ($score1 > $score2) {
-        $_SESSION['win'] += 1;
-    } elseif ($score1 < $score2) {
-        $_SESSION['lose'] += 1;
-    }
-}
-if (isset($_POST['reset'])) {
-    $_SESSION['win'] = 0;
-    $_SESSION['lose'] = 0;
-}
-// セッションに記録
-$_SESSION['player1'] = $player1;
-$_SESSION['player2'] = $player2;
-
 ?>
