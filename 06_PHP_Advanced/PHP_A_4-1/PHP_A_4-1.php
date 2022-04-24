@@ -31,61 +31,48 @@ try {
     $pdo = null;
 }
 
-// 勝負ボタンの調整、すでに押されているか
+$playerOne = [];
+$playerTwo = [];
+// 勝負ボタンが押された回数を記録
 if (isset($_SESSION['clickCount'])) {
     $clickCount = $_SESSION['clickCount'];
 } else {
     $clickCount = 0;
 }
-if (isset($_POST['shuffle_card'])) {
-    $clickCount = 0;
-}
 
-// セッションから手札を読み込み
-if (isset($_POST['shuffle_card'])) {
-    $playerOne = [];
-    $playerTwo = [];
+// Postの値によって変数を定義
+// 初めてアクセス
+if (empty($_POST)) {
+    $_SESSION['win'] = 0;
+    $_SESSION['lose'] = 0;
+    $clickCount = 1;
+} elseif (isset($_POST['shuffle_card'])) {
+    // シャッフルボタンが押されたらカードを二人のプレイヤーに配布
+    list($playerOne, $playerTwo) = array_chunk($rows, ceil(count($rows) / 2));
     $clickCount = 0;
-} else {
+} elseif (isset($_POST['judge_game'])) {
+    // 勝負ボタンが押されたらセッションからスコアを受け取る
     $playerOne = $_SESSION['playerOne'];
     $playerTwo = $_SESSION['playerTwo'];
+    $clickCount += 1;
+} elseif (isset($_POST['reset'])) {
+    $_SESSION['win'] = 0;
+    $_SESSION['lose'] = 0;
 }
 
-// カードを重複無しに二人のプレイヤーにランダムに配布
-if (isset($_POST['shuffle_card'])) {
-    for ($i = 0; $i < 5; $i++) {
-        array_push($playerOne, [
-            'mark' => $rows[$i]['mark'],
-            'number' => intval($rows[$i]['number']),
-        ]);
-    }
-    for ($i = 5; $i < 10; $i++) {
-        array_push($playerTwo, [
-            'mark' => $rows[$i]['mark'],
-            'number' => intval($rows[$i]['number']),
-        ]);
-    }
-}
-
+// スコアを割り振る
 $scoreOne = setScore($playerOne);
 $scoreTwo = setScore($playerTwo);
 
 // Win, Lose を記録する
-if (isset($_POST['judge_game']) && $clickCount < 1) {
+if (isset($_POST['judge_game']) && $clickCount <= 1) {
     if ($scoreOne > $scoreTwo) {
         $_SESSION['win'] += 1;
     } elseif ($scoreOne < $scoreTwo) {
         $_SESSION['lose'] += 1;
     }
 }
-if (isset($_POST['judge_game'])) {
-    $clickCount += 1;
-}
 
-if (isset($_POST['reset'])) {
-    $_SESSION['win'] = 0;
-    $_SESSION['lose'] = 0;
-}
 // セッションに記録
 $_SESSION['playerOne'] = $playerOne;
 $_SESSION['playerTwo'] = $playerTwo;
@@ -168,4 +155,7 @@ function displayStatus($status)
         echo $value . ' ';
     }
 }
+
+include 'index.html';
+
 ?>
