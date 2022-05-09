@@ -8,26 +8,26 @@ use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {
-    // Show all listings
+    // トップ画面（全てのメモ）を表示
     public function index() {
         return view('listings.index', [
             'listings' => Listing::latest()->filter(request(['userId']))->simplepaginate(5),
             'users' => User::all()
         ]);
     }
-    // Show single listing
+    // １つのメモを表示
     public function show(Listing $listing) {
         return view('listings.show', [
             'listing' => $listing
         ]);
     }
 
-    // Show create form
+    // メモの投稿画面を表示
     public function create() {
         return view('listings.create');
     }
  
-    // store listing data
+    // 投稿されたデータを保存
     public function store(Request $request) {
         $formFields = $request->validate([
             'title' => 'required',
@@ -38,18 +38,18 @@ class ListingController extends Controller
 
         Listing::create($formFields);
 
-        return redirect('/')->with('message', 'Listing created successfully!');
+        return redirect('/')->with('message', 'メモを投稿しました！');
     }
 
-    // Show edit form
+    // 
     public function edit(Listing $listing) {
         return view('listings.edit', ['listing' => $listing]);
     }
 
-    // Update Listing Data
+    // メモを編集する画面を表示
     public function update(Request $request, Listing $listing) {
         if($listing->user_id != auth()->id()) {
-            abort(403, 'Unauthorized Action');
+            abort(403, 'この操作は認められていません');
         }
 
         $formFields = $request->validate([
@@ -59,16 +59,16 @@ class ListingController extends Controller
 
         $listing->update($formFields);
 
-        return redirect('/')->with('message', 'Listing updated successfully!');
+        return redirect('/')->with('message', 'メモが編集されました!');
     }
 
-    // Delete listing
+    // メモを削除する
     public function destroy(Listing $listing) {
         if($listing->user_id != auth()->id()) {
-            abort(403, 'Unauthorized Action');
+            abort(403, 'この操作は認められていません');
         }
         $listing->delete();
-        return redirect('/')->with('message', 'Listing deleted successfully');
+        return redirect('/')->with('message', 'メモが削除されました');
     }
 }
 

@@ -26,7 +26,7 @@
                   </button>
               </a>
               <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="/listings/{{$listing->id}}/edit">
+                  <a class="dropdown-item" href="{{route('listing.edit', ['listing' => $listing->id])}}">
                       <i class="fas fa-pen mr-1"></i>記事を更新する
                   </a>
                   <div class="dropdown-divider"></div>
@@ -48,7 +48,7 @@
                           <span aria-hidden="true">&times;</span>
                       </button>
                   </div>
-                  <form method="POST" action="/listings/{{$listing->id}}">
+                  <form method="POST" action="{{route('listing.destroy', ['listing' => $listing->id])}}">
                     @csrf
                     @method('DELETE')
                       <div class="modal-body">
@@ -68,7 +68,7 @@
   </div>
   <div class="card-body pt-0 pb-2">
       <h3 class="h4 card-title">
-          <a class="text-dark" href="/listings/{{$listing->id}}">
+          <a class="text-dark" href="{{route('listing.show', [$listing->id])}}">
               {{$listing->title}}
           </a>
       </h3>

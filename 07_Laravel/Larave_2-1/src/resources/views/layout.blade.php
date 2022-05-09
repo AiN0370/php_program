@@ -16,11 +16,11 @@
     <ul class="navbar-nav ml-auto">
 
         <li class="nav-item">
-            <a class="nav-link" href="/listings/create">投稿する</a>
+            <a class="nav-link" href="{{route('listing.create')}}">投稿する</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/register">ユーザー登録</a>
+            <a class="nav-link" href="{{route('users.create')}}">ユーザー登録</a>
         </li>
         @auth
         <li class="nav-item">
@@ -30,15 +30,15 @@
             </form> 
         </li>
         <li class="nav-item">
-            <span class="nav-link">Welcome {{auth()->user()->name}}</span>
+            <span class="nav-link">{{auth()->user()->name}}</span>
         </li>
         @else     
         <li class="nav-item">
-            <a class="nav-link" href="/login">ログイン</a>
+            <a class="nav-link" href="{{route('users.login')}}">ログイン</a>
         </li>
         @endauth
 
-        <form id="logout-button" method="POST" action="#">
+        <form id="logout-button" method="POST" action={{route('users.logout')}}">
         </form>
     </ul>
 </nav>

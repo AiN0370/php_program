@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Listing;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ListingController;
@@ -16,37 +15,34 @@ use App\Http\Controllers\ListingController;
 |
 */
 // All listings
-Route::get('/', [ListingController::class, 'index']);
+Route::get('/', [ListingController::class, 'index'])->name('listings.show');
 
-// Show create form
-Route::get('/listings/create', [ListingController::class, 'create'])->middleware('auth');
+// 投稿のルートグループ
+Route::group(['prefix' => 'listings', 'controller' => ListingController::class],  function () {
+  // 投稿を保存する
+  Route::post('/', 'store')->name('listing.store')->middleware('auth');
+  // 投稿するフォームを表示する
+  Route::get('/create', 'create')->name('listing.create')->middleware('auth');
+  // 編集するフォームを表示する
+  Route::get('/{listing}/edit', 'edit')->name('listing.edit')->middleware('auth');
+  // 投稿を編集する
+  Route::put('/{listing}', 'update')->name('listing.update')->middleware('auth');
+  // 投稿を削除する
+  Route::delete('/{listing}', 'destroy')->name('listing.destroy')->middleware('auth');
+  // １つの投稿を表示する
+  Route::get('/{listing}', 'show')->name('listing.show');
+});
 
-// Store listing data
-Route::post('/listings', [ListingController::class, 'store'])->middleware('auth');
-
-// Show edit form
-Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->middleware('auth');
-
-// Update listing
-Route::put('/listings/{listing}', [ListingController::class, 'update'])->middleware('auth');
-
-// Delete listing
-Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->middleware('auth');
-
-// Single listing
-Route::get('/listings/{listing}', [ListingController::class, 'show']);
-
-// Show register/create form
-Route::get('/register', [UserController::class, 'create'])->middleware('guest');
-
-// Create new user
-Route::post('/', [UserController::class, 'store']);
-
-// Log user out
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
-
-// Show login form
-Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
-
-// Log In User
-Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+// ユーザーのルートグループ
+Route::controller(UserController::class)->group(function () {
+  // ユーザー登録画面を表示
+  Route::get('/register', 'create')->name('users.create')->middleware('guest');
+  // 新しいユーザーを作成
+  Route::post('/', 'store')->name('users.store');
+  // ユーザーをログアウトする
+  Route::post('/logout', 'logout')->name('users.logout')->middleware('auth');
+  // ログイン画面を表示
+  Route::get('/login', 'login')->name('users.login')->middleware('guest');
+  // ユーザーをログインする
+  Route::post('/users/authenticate', 'authenticate')->name('users.authenticate');
+});

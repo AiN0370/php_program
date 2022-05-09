@@ -9,7 +9,7 @@
     @endforeach
 
     @else
-        <p>No listings found</p>
+        <p>投稿が見つかりません</p>
     @endunless
 
     <div class="mt-6 p-4">

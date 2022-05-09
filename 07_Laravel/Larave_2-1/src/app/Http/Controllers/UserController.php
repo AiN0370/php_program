@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // Show Register/Create Form
+    //  ユーザー登録の画面を表示する
     public function create() {
         return view('users.register');
     }
 
-    // Create New User
+    // 新しくユーザーを作る
     public function store(Request $request) {
         $formFields = $request->validate([
            'name' => ['required', 'min:3'],
@@ -22,35 +21,34 @@ class UserController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        // Hash Password
+        // パスワードをハッシュ化
         $formFields['password'] = bcrypt($formFields['password']);
 
-        // Create User
+        // ユーザーを作成
         $user = User::create($formFields);
 
-        // Login
+        // ユーザーをログイン
         auth()->login($user);
-        // dd($user);
-        return redirect('/')->with('message', 'User created and logged in');
+        return redirect('/')->with('message', '新しくユーザーが作成されました');
     }
 
-    // Logout User
+    // ユーザーをログアウトする
     public function logout(Request $request) {
         auth()->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('message', 'You have been logged out!');
+        return redirect('/')->with('message', 'ログアウトしました');
 
     }
 
-    // Show Login Form
+    // ログインフォームを表示する
     public function login() {
         return view('users.login');
     }
 
-    // Authenticate User
+    // ユーザーを照合する
     public function authenticate(Request $request) {
         $formFields = $request->validate([
             'email' => ['required', 'email'],
@@ -62,7 +60,6 @@ class UserController extends Controller
 
             return redirect('/')->with('message', 'You are now logged in!');
         }
-        //  dd($formFields);
         return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
 }
