@@ -58,8 +58,8 @@ class UserController extends Controller
         if(auth()->attempt($formFields)) {
             $request->session()->regenerate();
 
-            return redirect('/')->with('message', 'You are now logged in!');
+            return redirect('/')->with('message', 'ログインしました!');
         }
-        return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
+        return back()->withErrors(['email' => 'ユーザー情報が一致しません'])->onlyInput('email');
     }
 }
