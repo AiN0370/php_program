@@ -8,7 +8,6 @@ use App\Models\Status;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Redirect;
 
 class UsersController extends Controller
 {
@@ -17,13 +16,12 @@ class UsersController extends Controller
         $this->middleware('auth');
     }
     /**
-     * Display a listing of the resource.
+     * ユーザーのダッシュボードページを表示する
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // ダッシュボードページを表示
         $users = User::all();
         $user = auth()->user();
         return view('dashboard')->with([
@@ -33,7 +31,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ユーザー情報を編集するためのフォームを表示する
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -51,7 +49,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 保存されているユーザーの情報を更新する
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -61,21 +59,32 @@ class UsersController extends Controller
     {
         $status = $user->status->pluck('name');
 
-        // 管理者と admin ユーザーのみステータスの変更ができる。
-        if (auth()->user()->hasAnyRoles(['admin', '管理者'])) {
-            if($request->username ) {
-                $user->username = $request->username;
-            }
-            if($request->email ) {
-                $user->email = $request->email;
-            }
-            if($request->roles ) {
+        // admin ユーザーは全ての情報を更新できる
+        if (auth()->user()->hasRole('admin')) {
+            $user->username = $request->username;
+            $user->email = $request->email;
+            if ($request->role) {
                 $user->roles()->sync($request->roles);
             }
-            $user->status()->sync($request->status);
+            if ($request->status) {
+                $user->status()->sync($request->status);
+            }
             $user->save();
-            
-            return redirect(route('dashboard'))->with('message', 'ユーザー情報がアップデートされました。');
+            return back()->with('message', 'ユーザー情報がアップデートされました。');
+        } 
+        // 管理者ユーザーは申請ステータスと自分の情報のみ更新ができる
+        elseif (auth()->user()->hasRole('管理者')) { 
+            if ($request->username) { 
+                $user->username = $request->username;
+            }
+            if ($request->email) { 
+                $user->email = $request->email;
+            }
+            if ($request->status) {
+                $user->status()->sync($request->status);
+            }
+            $user->save();
+            return back()->with('message', 'ユーザー情報がアップデートされました。');
         } 
         // 申請ステータスが「確認待ち」かつ申請を出した本人のみ承認申請の修正ができる
         elseif ($status->contains('確認待ち') || empty($status->toArray())){
@@ -86,21 +95,21 @@ class UsersController extends Controller
             }
             $user->save();
             
-            return redirect(route('dashboard'))->with('message', 'ユーザー情報がアップデートされました。');
+            return back()->with('message', 'ユーザー情報がアップデートされました。');
         } 
         // 登録した本人は、「確認中」から「破棄」にステータスが変更できる
         elseif ($status->contains('確認中') && $request->status) {
             $user->status()->sync($request->status);
             $user->save();
             
-            return redirect(route('dashboard'))->with('alert', '申請が破棄されました。');
+            return back()->with('alert', '申請が破棄されました。');
         }
         
-        return Redirect::back()->with('alert', '現在ユーザー情報は編集できません');
+        return back()->with('alert', '現在ユーザー情報は編集できません');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * ユーザー情報を削除する
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

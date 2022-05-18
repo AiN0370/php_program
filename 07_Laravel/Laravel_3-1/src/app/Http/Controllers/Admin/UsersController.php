@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Gate;
 
 class UsersController extends Controller
 {
@@ -16,7 +15,7 @@ class UsersController extends Controller
         $this->middleware('auth');
     }
     /**
-     * Display a listing of the resource.
+     * ユーザーリストを表示する
      *
      * @return \Illuminate\Http\Response
      */
@@ -27,7 +26,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ユーザー情報を編集するためのフォームを表示する
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -45,7 +44,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 保存されているユーザーの情報を更新する
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -64,7 +63,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * ユーザー情報を削除する
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

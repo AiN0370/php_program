@@ -38,8 +38,15 @@
           @enderror
         </div>
 
-        <div>
-          <button type="submit" class="bg-blue-500 text-white rounded px-4 py-3 font-medium w-full">登録</button>
+        <div class="mb-4">
+          <label for="role" class="text-sm">権限ステータス</label>
+          <select name="role" id="role" class="bg-gray-100 border-2 w-full p-4 rounded-lg mt-1">
+            @foreach ($roles as $role)
+            <option value="{{ $role->id }}">{{ $role->name }}</option>
+            @endforeach
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white rounded px-4 py-3 font-medium w-full">登録</button>
         </div>
       </form>
     </div>

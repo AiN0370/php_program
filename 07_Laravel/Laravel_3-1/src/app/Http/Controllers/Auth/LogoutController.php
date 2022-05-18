@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
+    /**
+     * ユーザーをログアウトする
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */   
     public function store() {
         auth()->logout();
 

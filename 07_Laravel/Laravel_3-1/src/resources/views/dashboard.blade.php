@@ -75,6 +75,10 @@
                   </div>
                 </div>
               </div>
+              <div class="flex text-gray-500">
+                <p class="max-w-sm md:w-1/4 mx-auto p-3">権限ステータス</p>
+                <p class="max-w-sm md:w-3/4 mx-auto py-3">{{ implode(',', $user->roles()->get()->pluck('name')->toArray()) }}</p>
+              </div>
           </div> 
           <div class="pt-10 pb-5 text-right">
             <button type="submit"  class="bg-blue-500 text-white rounded px-8 py-2 font-medium inline-block">編集</button>

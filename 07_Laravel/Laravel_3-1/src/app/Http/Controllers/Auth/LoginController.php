@@ -12,12 +12,23 @@ class LoginController extends Controller
         $this->middleware(['guest']);
     }
 
+    /**
+     * ログインページを表示する
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index() {
         return view('auth.login');
     }
 
+    /**
+     * ログイン情報を保存してデータと照合する
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request) {
-        $this -> validate($request, [
+        $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required'
         ]);

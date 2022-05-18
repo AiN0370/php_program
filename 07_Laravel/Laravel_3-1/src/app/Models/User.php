@@ -13,7 +13,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
     /**
-     * The attributes that are mass assignable.
+     * 一括割り当て可能な属性
      *
      * @var array
      */
@@ -22,7 +22,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * 配列に対して非表示にする必要がある属性
      *
      * @var array
      */
@@ -31,7 +31,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * ネイティブタイプにキャストする必要がある属性
      *
      * @var array
      */
@@ -54,14 +54,6 @@ class User extends Authenticatable
             return true;
         }
         return false;
-    }
-
-    public function isUser() {
-        if (auth()->user()->id === $user->id || $user->hasRole('admin')) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function status() {
