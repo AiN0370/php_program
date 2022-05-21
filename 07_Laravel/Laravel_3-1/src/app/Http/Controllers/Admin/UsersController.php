@@ -28,7 +28,7 @@ class UsersController extends Controller
     /**
      * ユーザー情報を編集するためのフォームを表示する
      *
-     * @param  int  $id
+     * @param  App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user)
@@ -47,7 +47,7 @@ class UsersController extends Controller
      * 保存されているユーザーの情報を更新する
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
@@ -65,7 +65,7 @@ class UsersController extends Controller
     /**
      * ユーザー情報を削除する
      *
-     * @param  int  $id
+     * @param  App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)
